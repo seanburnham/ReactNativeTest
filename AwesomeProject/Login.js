@@ -1,30 +1,49 @@
 'use strict';
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, Image, TextInput, TouchableHighlight } from 'react-native';
+import { Text, View, StyleSheet, Image, TextInput, TouchableHighlight, ActivityIndicator } from 'react-native';
 
 export default class Login extends Component {
-    render() {
-      return (
-          <View style={styles.container}>
-            <Image style={styles.logo}
-            source={{uri: 'logo'}}/>
-            <Text style={styles.header}>
-                Book Vote
-            </Text>
-            <TextInput style={styles.input}
-              placeholder="Username"/>
-            <TextInput style={styles.input}
-              placeholder="Password"
-              secureTextEntry="true"/>
-            <TouchableHighlight style={styles.button}>
-              <Text style={styles.buttonText}>
-                Login
-              </Text>
-            </TouchableHighlight>
-          </View>
-      );
-    }
+  constructor(props){
+    super(props);
+    // Don't do this!
+    this.state = { showProgress: false };
   }
+  render() {
+    return (
+      <View style={styles.container}>
+        <Image style={styles.logo}
+        source={{uri: 'logo'}}/>
+        <Text style={styles.header}>
+            Book Vote
+        </Text>
+        <TextInput style={styles.input}
+          onChangeText={(text) => this.setState({username: text})}
+          placeholder="Username"/>
+        <TextInput style={styles.input}
+          onChangeText={(text) => this.setState({password: text})}
+          placeholder="Password"
+          secureTextEntry='true'/>
+        <TouchableHighlight 
+          onPress={this.onLoginPressed.bind(this)}
+          style={styles.button}>
+          <Text style={styles.buttonText}>
+            Login
+          </Text>
+        </TouchableHighlight>
+        <ActivityIndicator
+          animating = {this.state.showProgress}
+          size = 'large'
+          style = {styles.loader}/>
+      </View>
+    );
+  }
+
+  onLoginPressed(){
+    console.log('Attempting to login with username: ' + this.state.username);
+    this.setState({showProgress: true});
+  }
+
+}
 
 var styles = StyleSheet.create({
     container: {
@@ -65,6 +84,9 @@ var styles = StyleSheet.create({
       fontSize: 22,
       alignSelf: 'center',
 
+    },
+    loader: {
+      marginTop: 20,
     }
 });
 module.exports = Login;
